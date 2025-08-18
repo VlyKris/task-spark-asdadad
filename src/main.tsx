@@ -1,58 +1,38 @@
-import { Toaster } from "@/components/ui/sonner";
-import { VlyToolbar } from "@/components/VlyToolbar";
-import { InstrumentationProvider } from "@/instrumentation.tsx";
-import Auth from "@/pages/Auth.tsx";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { ConvexReactClient } from "convex/react";
-import { StrictMode, useEffect } from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
+import { Landing } from "@/pages/Landing";
+import { TodoApp } from "@/pages/TodoApp";
+import { ProtectedPage } from "@/lib/protected-page";
 import "./index.css";
-import Dashboard from "./pages/Dashboard.tsx";
-import Landing from "./pages/Landing.tsx";
-import NotFound from "./pages/NotFound.tsx";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
-function RouteSyncer() {
-  const location = useLocation();
-  useEffect(() => {
-    window.parent.postMessage(
-      { type: "iframe-route-change", path: location.pathname },
-      "*",
-    );
-  }, [location.pathname]);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Landing />,
+  },
+  {
+    path: "/app",
+    element: (
+      <ProtectedPage>
+        <TodoApp />
+      </ProtectedPage>
+    ),
+  },
+]);
 
-  useEffect(() => {
-    function handleMessage(event: MessageEvent) {
-      if (event.data?.type === "navigate") {
-        if (event.data.direction === "back") window.history.back();
-        if (event.data.direction === "forward") window.history.forward();
-      }
-    }
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, []);
-
-  return null;
-}
-
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <VlyToolbar />
-    <InstrumentationProvider>
-      <ConvexAuthProvider client={convex}>
-        <BrowserRouter>
-          <RouteSyncer />
-          <Routes>
-            <Route path="*" element={<NotFound />} />
-            <Route path="/" element={<Landing />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </BrowserRouter>
-        <Toaster />
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <ConvexProvider client={convex}>
+      <ConvexAuthProvider>
+        <RouterProvider router={router} />
+        <Toaster position="top-right" richColors />
       </ConvexAuthProvider>
-    </InstrumentationProvider>
-  </StrictMode>,
+    </ConvexProvider>
+  </React.StrictMode>
 );
