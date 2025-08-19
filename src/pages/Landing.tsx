@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { AuthButton } from "@/components/auth/AuthButton";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 import { motion } from "framer-motion";
 import { CheckSquare, Sparkles, Zap, Heart, Star } from "lucide-react";
 
@@ -21,7 +21,12 @@ export function Landing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-400 overflow-hidden">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')`,
+        }}
+      ></div>
       
       <div className="relative z-10">
         <header className="p-6">
@@ -80,7 +85,7 @@ export function Landing() {
                 transition={{ delay: 0.6 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center items-center"
               >
-                <AuthButton size="lg" />
+                <AuthButton />
                 <div className="flex items-center gap-2 text-white/80 text-sm">
                   <Star className="h-4 w-4 fill-yellow-300 text-yellow-300" />
                   <span>Free forever • No credit card required</span>

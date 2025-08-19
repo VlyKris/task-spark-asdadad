@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
 import { Landing } from "@/pages/Landing";
 import { TodoApp } from "@/pages/TodoApp";
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ConvexProvider client={convex}>
-      <ConvexAuthProvider>
+      <ConvexAuthProvider client={convex}>
         <RouterProvider router={router} />
         <Toaster position="top-right" richColors />
       </ConvexAuthProvider>
